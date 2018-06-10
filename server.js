@@ -135,6 +135,35 @@ app.post('/upload', function(req, res) {
 });
 
 
+app.get("/pridobi", function(req,res){
+  var user = req.params.id;
+  var mysql = require('mysql');
+  var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "mydb"
+  });
+
+  con.connect(function (err, test) {
+    if (err) throw err;
+    var t = con.escape(user);
+    con.query("SELECT ime,poskus FROM users ORDER BY poskus;", function (err, result, rez) {
+      res.status(200).jsonp(result);
+
+    })
+
+  });
+})
+
+
+app.use(exp.static(__dirname + "/html"));
+
+app.get("/",function (req,res) {
+  res.sendFile(__dirname + "/html/index.html");
+})
+
+
 
 
 
