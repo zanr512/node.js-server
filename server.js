@@ -66,8 +66,11 @@ app.post('/uploadFirst', function(req, res) {
         fr.saveImage(__dirname + "/images/ " + req.body.tst + ".png", faceImages[0])
         const recognizer = fr.FaceRecognizer();
         var i = [fr.loadImage(__dirname + "/images/ " + req.body.tst + ".png") ];
-        const modelState = require(__dirname + '/model.json');
-        recognizer.load(modelState)
+        if(fs.existsSync(__dirname + '/model.json'))
+        {
+          const modelState = require(__dirname + '/model.json');
+          recognizer.load(modelState)
+        }
         recognizer.addFaces(i, req.body.tst);
         const modelState1 = recognizer.serialize();
         var img = fr.loadImage(__dirname + "/images/ " + req.body.tst + ".png");
@@ -88,12 +91,10 @@ app.post('/upload', function(req, res) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');
  
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
   let sampleFile = req.files.sampleFile;
   console.log(req.body.tst);
   console.log("Nalagam file");
  
-  // Use the mv() method to place the file somewhere on your server
   sampleFile.mv(__dirname + "/images/ " + req.body.tst + ".png", function(err) {
     if (err)
       return res.status(500).send(err); 
@@ -121,7 +122,7 @@ app.post('/upload', function(req, res) {
         }
         else
         {
-          res.send(200).send("ni ok");
+          res.status(200).send("ni ok");
         }
         fs.writeFileSync('model.json', JSON.stringify(modelState1));
         console.log("Podatki o obrazu zapisani");
