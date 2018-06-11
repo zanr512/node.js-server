@@ -91,11 +91,11 @@ app.post('/upload', function(req, res) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');
  
-  let sampleFile = req.files.sampleFile;
+  let file = req.files.sampleFile;
   console.log(req.body.tst);
   console.log("Nalagam file");
  
-  sampleFile.mv(__dirname + "/images/ " + req.body.tst + ".png", function(err) {
+  file.mv(__dirname + "/images/ " + req.body.tst + ".png", function(err) {
     if (err)
       return res.status(500).send(err); 
       const image = fr.loadImage(__dirname + "/images/ " + req.body.tst + ".png");
@@ -148,10 +148,33 @@ app.get("/pridobi", function(req,res){
   con.connect(function (err, test) {
     if (err) throw err;
     var t = con.escape(user);
-    con.query("SELECT ime,poskus FROM users ORDER BY poskus;", function (err, result, rez) {
+    con.query("SELECT ime,poskus FROM users WHERE finish = 1 ORDER BY poskus;", function (err, result, rez) {
       res.status(200).jsonp(result);
 
     })
+
+  });
+})
+
+
+app.post("/koncan", function(req,res){
+  var user = req.body.tst;
+  var poskus = req.body.poskus;
+  var mysql = require('mysql');
+  var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "mydb"
+  });
+
+  con.connect(function (err, test) {
+    if (err) throw err;
+    var t = con.escape(user);
+    con.query("UPDATE users SET finish = 1, poskus = " + poskus + " WHERE (users = " + user + ");", function (err, result, rez){
+      
+    })
+
 
   });
 })

@@ -20,7 +20,7 @@ exports.reset = function () {
       console.log("Table deleted");
     });
 
-    var sql = "CREATE TABLE  users (id INT AUTO_INCREMENT PRIMARY KEY, ime VARCHAR(255), poskus INT)";
+    var sql = "CREATE TABLE  users (id INT AUTO_INCREMENT PRIMARY KEY, ime VARCHAR(255), poskus INT, finish INT)";
     con.query(sql, function (err, result) {
       if (err) throw err;
       console.log("Table created");
